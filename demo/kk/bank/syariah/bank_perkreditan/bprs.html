@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<TITLE> BPRS</TITLE>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="../../../../../css/demo.css" type="text/css">
+	<link rel="stylesheet" href="../../../../../css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="../../../../../js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="../../../../../js/jquery.ztree.core.js"></script>
+	<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck.js"></script>
+	  <script type="text/javascript" src="../../../js/jquery.ztree.exedit.js"></script>-->
+	<SCRIPT type="text/javascript">
+		var setting = {
+			data: {
+				key: {
+					title:"t"
+				},
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				beforeClick: beforeClick,
+				onClick: onClick
+			}
+		};
+
+		var zNodes =[
+			{ id:1, pId:0, name:"Data Pokok Entitas", t:"Data Pokok Entitas, just click on me", open: false},
+				{ id:101, pId:1, name:"Jumlah Entitas", t:"Kegiatan Usaha, just click on me"},
+				{ id:102, pId:1, name:"Perkembangan Jumlah Kantor", t:"Kegiatan Usaha, just click on me"},
+				{ id:103, pId:1, name:"Kegiatan Usaha", t:"Kegiatan Usaha, just click on me"},
+				{ id:104, pId:1, name:"Perkembangan Jumlah Entitas dan Kantor", t:"Kegiatan Usaha, just click on me"},
+					//{ id:10101, pId:101, name:"SPI Tabel 1.8 (BUKU 2)", t:"SPI Tabel 1.8 (BUKU 2), just click on me", file: "buk/dpe/ke/tb12.html"},
+					//{ id:10102, pId:101, name:"SPI Tabel 1.9 (BUKU 3)", t:"SPI Tabel 1.9 (BUKU 3), just click on me", file: "buk/dpe/ke/tb13.html"},
+					//{ id:10103, pId:101, name:"SPI Tabel 1.10 (BUKU 4)", t:"SPI Tabel 1.10 (BUKU 4), just click on me", file: "buk/dpe/ke/tb14.html"},
+
+			{id: 2, pId: 0, name: "Laporan Risiko", file: "bank/konvensional/bank_umum/buk/lr"},
+				{id: 201, pId: 2, name: "Kinerja Entitas", file: "bank/konvensional/bank_umum/buk/lr/as"},
+				{id: 202, pId: 2, name: "Kredit/Pembiayaan dan NPL/NPF", file: "bank/konvensional/bank_umum/buk/lr/as"},
+					//{id: 40101, pId: 401, name: "SPI Tabel 1.16 a", file: "bank/konvensional/bank_umum/buk/lr/ke/tb116"},
+					//{id: 40102, pId: 401, name: "SPI Tabel 1.19", file: "bank/konvensional/bank_umum/buk/lr/ke/tb119"},
+					//{id: 40103, pId: 401, name: "SPI Tabel 1.20 (BUKU 2)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb120"},
+					//{id: 40104, pId: 401, name: "SPI Tabel 1.21 (BUKU 3)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb121"},
+					//{id: 40105, pId: 401, name: "SPI Tabel 1.22 (BUKU 4)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb122"},
+					
+
+			{id: 3, pId: 0, name: "Laporan Statistik dan Pengawasan", file: "bank/konvensional/bank_umum/buk/lsp"},
+			 	{id: 301, pId: 3, name: "Komposisi Dana Pihak Ketiga", file: "bank/konvensional/bank_umum/buk/lsp/as"},
+			 		//{id: 50101, pId: 501, name: "SPI Tabel 1.34", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb134"},
+			 		//{id: 50102, pId: 501, name: "SPI Tabel 1.35", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb135"},
+			 		//{id: 50103, pId: 501, name: "SPI Tabel 1.36", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb136"},
+		];
+
+		var log, className = "dark";
+		function beforeClick(treeId, treeNode, clickFlag) {
+			className = (className === "dark" ? "":"dark");
+			showLog("[ "+getTime()+" beforeClick ]&nbsp;&nbsp;" + treeNode.name );
+			return (treeNode.click != false);
+		}
+		function onClick(event, treeId, treeNode, clickFlag) {
+			showLog("[ "+getTime()+" onClick ]&nbsp;&nbsp;clickFlag = " + clickFlag + " (" + (clickFlag===1 ? "single selected": (clickFlag===0 ? "<b>cancel selected</b>" : "<b>multi selected</b>")) + ")");
+			
+			$('#mainIframe').attr('SRC', treeNode['file'])
+		}		
+		function showLog(str) {
+			if (!log) log = $("#log");
+			log.append("<li class='"+className+"'>"+str+"</li>");
+			if(log.children("li").length > 8) {
+				log.get(0).removeChild(log.children("li")[0]);
+			}
+		}
+		function getTime() {
+			var now= new Date(),
+			h=now.getHours(),
+			m=now.getMinutes(),
+			s=now.getSeconds();
+			return (h+":"+m+":"+s);
+		}
+
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		});
+		//-->
+	</SCRIPT>
+</HEAD>
+
+<BODY>
+<h1>BPRS</h1>
+<div class="content_wrap">
+	<div class="zTreeDemoBackground left">
+		<ul id="treeDemo" class="ztree"></ul>
+	</div>
+	<div class="right">
+		<ul class="info">
+			<IFRAME ID="mainIframe" Name="mainIframe" FRAMEBORDER=0 SCROLLING=AUTO width=100% height=600px
+              SRC="buk/dpe/ke/tb12.html"></IFRAME>
+		</ul>
+	</div>
+</div>
+</BODY>
+</HTML>

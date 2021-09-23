@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+  <TITLE> ZTREE DEMO </TITLE>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../../css/zTreeStyle/zTreeStyle.css" type="text/css">
+  <style>
+    body {
+      background-color: white;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+ 
+    div, p, table, th, td {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      font-size: 12px;
+      font-family: dotum, Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+    }
+ 
+    #testIframe {
+      margin-left: 10px;
+    }
+  </style>
+  <script type="text/javascript" src="../../js/jquery-1.4.4.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery.ztree.core.js"></script>
+  <SCRIPT type="text/javascript">
+    <!--
+    var zTree;
+    var demoIframe;
+ 
+    var setting = {
+      view: {
+        dblClickExpand: false,
+        showLine: true,
+        selectedMulti: false
+      },
+      data: {
+        simpleData: {
+          enable: true,
+          idKey: "id",
+          pIdKey: "pId",
+          rootPId: ""
+        }
+      },
+      callback: {
+        beforeClick: function (treeId, treeNode) {
+          var zTree = $.fn.zTree.getZTreeObj("tree");
+          if (treeNode.isParent) {
+            zTree.expandNode(treeNode);
+            return false;
+          } else {
+            demoIframe.attr("src", treeNode.file + ".html");
+            return true;
+          }
+        }
+      }
+    };
+ 
+    var zNodes = [
+      {id: 1, pId: 0, name: "BANK", open: false},
+        {id: 101, pId: 1, name: "Bank Umum", open: false},
+          {id: 10101, pId: 101, name: "Konvensiional", open: false},
+            {id: 1010101, pId: 10101, name: "BUK", file: "bank/konvensional/bank_umum/buk"},
+				{id: 101010101, pId: 1010101, name: "Data Pokok Entitas", file: "bank/konvensional/bank_umum/buk/dpe"},
+					{id: 10101010101, pId: 101010101, name: "Kegiatan Usaha", file: "bank/konvensional/bank_umum/buk/dpe/ke"},
+						{id: 1010101010101, pId: 10101010101, name: "SPI Tabel 1.2 (BUKU 2)", file: "bank/konvensional/bank_umum/buk/dpe/ke/tb12"},
+						{id: 1010101010102, pId: 10101010101, name: "SPI Tabel 1.3 (BUKU 3)", file: "bank/konvensional/bank_umum/buk/dpe/ke/tb13"},
+						{id: 1010101010103, pId: 10101010101, name: "SPI Tabel 1.4 (BUKU 4)", file: "bank/konvensional/bank_umum/buk/dpe/ke/tb14"},
+				{id: 101010102, pId: 1010101, name: "Laporan Keuangan", file: "bank/konvensional/bank_umum/buk/lk"},
+					{id: 10101010201, pId: 101010102, name: "Laporan Laba / Rugi", file: "bank/konvensional/bank_umum/buk/lk/lb"},
+						{id: 1010101020101, pId: 10101010201, name: "SPI Tabel 1.8 (BUKU 2) ", file: "bank/konvensional/bank_umum/buk/lk/lb/tb18"},
+						{id: 1010101020102, pId: 10101010201, name: "SPI Tabel 1.9 (BUKU 3) ", file: "bank/konvensional/bank_umum/buk/lk/lb/tb19"},
+						{id: 1010101020103, pId: 10101010201, name: "SPI Tabel 1.10 (BUKU 4)", file: "bank/konvensional/bank_umum/buk/lk/lb/tb110"},
+					{id: 10101010202, pId: 101010102, name: "Rekening Administratif", file: "bank/konvensional/bank_umum/buk/lk/ra"},
+						{id: 1010101020201, pId: 10101010202, name: "SPI Tabel 1.14", file: "bank/konvensional/bank_umum/buk/lk/ra/tb114"},
+						{id: 1010101020202, pId: 10101010202, name: "SPI Tabel 1.15", file: "bank/konvensional/bank_umum/buk/lk/ra/tb115"},
+						{id: 1010101020203, pId: 10101010202, name: "SPI Tabel 1.16", file: "bank/konvensional/bank_umum/buk/lk/ra/tb116"},
+					{id: 10101010203, pId: 101010102, name: "Aset/Aktiva Produktif", file: "bank/konvensional/bank_umum/buk/lk/as"},
+						{id: 1010101020301, pId: 10101010203, name: "SPI Tabel 1.28", file: "bank/konvensional/bank_umum/buk/lk/as/tb128"},
+						{id: 1010101020302, pId: 10101010203, name: "SPI Tabel 1.29", file: "bank/konvensional/bank_umum/buk/lk/as/tb129"},
+						{id: 1010101020303, pId: 10101010203, name: "SPI Tabel 1.30", file: "bank/konvensional/bank_umum/buk/lk/as/tb130"},
+				{id: 101010103, pId: 1010101, name: "Laporan Aktivitas", file: "bank/konvensional/bank_umum/buk/la"},
+					{id: 10101010301, pId: 101010103, name: "Suku Bunga/Bagi Hasil Rata-rata Dana Pihak Ketiga", file: "bank/konvensional/bank_umum/buk/la/as"},
+						{id: 1010101030101, pId: 10101010301, name: "SPI Tabel 1.40", file: "bank/konvensional/bank_umum/buk/la/sbh/tb140"},
+						{id: 1010101030102, pId: 10101010301, name: "SPI Tabel 1.41", file: "bank/konvensional/bank_umum/buk/la/sbh/tb141"},
+						{id: 1010101030103, pId: 10101010301, name: "SPI Tabel 1.42", file: "bank/konvensional/bank_umum/buk/la/sbh/tb142"},
+				{id: 101010104, pId: 1010101, name: "Laporan Risiko", file: "bank/konvensional/bank_umum/buk/lr"},
+					{id: 10101010401, pId: 101010104, name: "Kinerja Entitas", file: "bank/konvensional/bank_umum/buk/lr/as"},
+						{id: 1010101040101, pId: 10101010401, name: "SPI Tabel 1.16 a", file: "bank/konvensional/bank_umum/buk/lr/ke/tb116"},
+						{id: 1010101040102, pId: 10101010401, name: "SPI Tabel 1.19", file: "bank/konvensional/bank_umum/buk/lr/ke/tb119"},
+						{id: 1010101040103, pId: 10101010401, name: "SPI Tabel 1.20 (BUKU 2)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb120"},
+						{id: 1010101040104, pId: 10101010401, name: "SPI Tabel 1.21 (BUKU 3)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb121"},
+						{id: 1010101040105, pId: 10101010401, name: "SPI Tabel 1.22 (BUKU 4)", file: "bank/konvensional/bank_umum/buk/lr/ke/tb122"},
+				{id: 101010105, pId: 1010101, name: "Laporan Statistik dan Pengawasan", file: "bank/konvensional/bank_umum/buk/lsp"},
+					{id: 10101010501, pId: 101010105, name: "Komposisi Dana Pihak Ketiga", file: "bank/konvensional/bank_umum/buk/lsp/as"},
+						{id: 1010101050101, pId: 10101010501, name: "SPI Tabel 1.34", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb134"},
+						{id: 1010101050102, pId: 10101010501, name: "SPI Tabel 1.35", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb135"},
+						{id: 1010101050103, pId: 10101010501, name: "SPI Tabel 1.36", file: "bank/konvensional/bank_umum/buk/lsp/ke/tb136"},
+          {id: 10102, pId: 101, name: "Bank Perkreditan", open: false},
+			{id: 1010201, pId: 10102, name: "Konvensional", file: "bank/konvensional/bank_perkreditan/bpr"},
+				{id: 101020201, pId: 1010202, name: "Data Pokok Entitas", file: "bank/konvensional/bank_perkreditan/bpr/dpe"},
+				{id: 101020202, pId: 1010202, name: "Laporan Keuangan", file: "bank/konvensional/bank_perkreditan/bpr/lk"},
+				{id: 101020203, pId: 1010202, name: "Laporan Aktivitas", file: "bank/konvensional/bank_perkreditan/bpr/la"},
+				{id: 101020204, pId: 1010202, name: "Laporan Risiko", file: "bank/konvensional/bank_perkreditan/bpr/lr"},
+				{id: 101020205, pId: 1010202, name: "Laporan Statistik dan Pengawasan", file: "bank/konvensional/bank_perkreditan/bpr/dsp"},
+			{id: 1010202, pId: 10102, name: "Syariah", file: "bank/konvensional/bank_perkreditan/bpr"},
+
+			
+        {id: 102, pId: 1, name: "Bank Perkreditan", open: false},
+			{id: 10201, pId: 102, name: "Bank Umum", open: false},
+				{id: 1020101, pId: 10201, name: "BUS", file: "bank/syariah/bank_umum/bus"},
+				{id: 1020102, pId: 10201, name: "UUS", file: "bank/syariah/bank_umum/uus"},
+			{id: 10202, pId: 102, name: "Bank Perkreditan", open: false},
+				{id: 1020201, pId: 10202, name: "BPRS", file: "bank/syariah/bank_umum/bprs"},
+		{id: 103, pId: 1, name: "Bank Syariah", open: false},
+		
+		
+      {id: 2, pId: 0, name: "IKNB", open: false},
+        {id: 201, pId: 2, name: "Konvensional", file: "excheck/checkbox"},
+			{id: 20101, pId: 201, name: "Lembaga Pembiayaan", open: false},
+				{id: 2010101, pId: 20101, name: "PP", open: false},
+				{id: 2010102, pId: 20101, name: "PMV", open: false},
+				{id: 2010103, pId: 20101, name: "PPI", open: false},
+			{id: 20102, pId: 201, name: "Dana Pensiun", open: false},
+				{id: 2010201, pId: 20102, name: "DPLK", open: false},
+				{id: 2010202, pId: 20102, name: "PPIP", open: false},
+				{id: 2010203, pId: 20102, name: "PPMP", open: false},
+			{id: 20103, pId: 201, name: "Asuransi", open: false},
+				{id: 2010301, pId: 20103, name: "ASUM", open: false},
+				{id: 2010302, pId: 20103, name: "ASJI", open: false},
+				{id: 2010303, pId: 20103, name: "REAS", open: false},
+			{id: 20104, pId: 201, name: "Lembaga Keuangan Khusus", open: false},
+				{id: 2010401, pId: 20104, name: "Lembaga Pembiayaan Ekspor Indonesia (LPEI)", open: false},
+				{id: 2010402, pId: 20104, name: "Perusahaan Pergadaian", open: false},
+				{id: 2010403, pId: 20104, name: "Lembaga Penjamin", open: false},
+				{id: 2010404, pId: 20104, name: "PT SMF", open: false},
+				{id: 2010405, pId: 20104, name: "PT Permodalan Nasional Madani (PNM)", open: false},
+				{id: 2010406, pId: 20104, name: "PT Danareksa", open: false},
+			{id: 20105, pId: 201, name: "Jasa Penunjang", open: false},
+				{id: 2010501, pId: 20105, name: "Perusahaan Pialang Asuransi", open: false},
+				{id: 2010502, pId: 20105, name: "Perusahaan Pialang Reasuransi", open: false},
+				{id: 2010503, pId: 20105, name: "Perusahaan Penilai Kerugian Asuransi", open: false},
+			{id: 20106, pId: 201, name: "LKM", open: false},
+			{id: 20107, pId: 201, name: "FINTECH", open: false},
+			
+        {id: 202, pId: 2, name: "Syariah", open: false},
+		{id: 20201, pId: 202, name: "Lembaga Pembiayaan", open: false},
+			{id: 2010201, pId: 20201, name: "PPS", open: false},
+			{id: 2010202, pId: 20201, name: "PMVS", open: false},
+		{id: 20202, pId: 202, name: "Dana Pensiun", open: false},
+			{id: 2020201, pId: 20202, name: "DPLK", open: false},
+			{id: 2020202, pId: 20202, name: "PPIP", open: false},
+			{id: 2020203, pId: 20202, name: "PPMP", open: false},
+		{id: 20203, pId: 202, name: "Asuransi", open: false},
+			{id: 2020301, pId: 20203, name: "ASUM", open: false},
+			{id: 2020302, pId: 20203, name: "ASJI", open: false},
+			{id: 2020303, pId: 20203, name: "REAS", open: false},
+		{id: 20204, pId: 202, name: "Lembaga Keuangan Khusus", open: false},
+			{id: 2020401, pId: 20204, name: "Perusahaan Pergadaian", open: false},
+			{id: 2020402, pId: 20204, name: "Lembaga Penjamin", open: false},
+		{id: 20206, pId: 202, name: "LKM", open: false},
+		{id: 20207, pId: 202, name: "FINTECH", open: false},
+		
+	  {id: 3, pId: 0, name: "PM", open: false},
+        {id: 301, pId: 3, name: "Aktivitas", open: false},
+        {id: 302, pId: 3, name: "Produk", open: false},
+        {id: 303, pId: 3, name: "Pelaku", open: false},
+    ]
+ 
+    // var zNodes = [
+    //   {id: 1, pId: 0, name: "[core] Basic Functions", open: false},
+    //   {id: 101, pId: 1, name: "Standard JSON Data", file: "core/standardData"},
+    //   {id: 102, pId: 1, name: "Simple JSON Data", file: "core/simpleData"},
+    //   {id: 103, pId: 1, name: "Don't Show Line", file: "core/noline"},
+    //   {id: 104, pId: 1, name: "Don't Show Icon", file: "core/noicon"},
+    //   {id: 105, pId: 1, name: "Custom Icon - icon", file: "core/custom_icon"},
+    //   {id: 106, pId: 1, name: "Custom Icon - iconSkin", file: "core/custom_iconSkin"},
+    //   {id: 107, pId: 1, name: "Custom Fonts", file: "core/custom_font"},
+    //   {id: 115, pId: 1, name: "Hyperlinks Demo", file: "core/url"},
+    //   {id: 108, pId: 1, name: "Dynamic Tree with Ajax", file: "core/async"},
+    //   {id: 109, pId: 1, name: "Dynamic Tree - zTree methods", file: "core/async_fun"},
+    //   {id: 110, pId: 1, name: "Update Node - zTree methods", file: "core/update_fun"},
+    //   {id: 111, pId: 1, name: "Control of Click Node", file: "core/click"},
+    //   {id: 112, pId: 1, name: "Control of Expand Node", file: "core/expand"},
+    //   {id: 113, pId: 1, name: "Search Nodes", file: "core/searchNodes"},
+    //   {id: 114, pId: 1, name: "Other Mouse Events for zTree", file: "core/otherMouse"},
+    //
+    //   {id: 2, pId: 0, name: "[excheck] Checkbox & Radio", open: false},
+    //   {id: 201, pId: 2, name: "Checkbox Operation", file: "excheck/checkbox"},
+    //   {id: 206, pId: 2, name: "Checkbox nocheck Demo", file: "excheck/checkbox_nocheck"},
+    //   {id: 207, pId: 2, name: "Checkbox chkDisabled Demo", file: "excheck/checkbox_chkDisabled"},
+    //   {id: 208, pId: 2, name: "Checkbox halfCheck Demo", file: "excheck/checkbox_halfCheck"},
+    //   {id: 202, pId: 2, name: "Statistics Checkbox is Checked", file: "excheck/checkbox_count"},
+    //   {id: 203, pId: 2, name: "Checkbox - zTree methods", file: "excheck/checkbox_fun"},
+    //   {id: 204, pId: 2, name: "Radio Operation", file: "excheck/radio"},
+    //   {id: 209, pId: 2, name: "Radio nocheck Demo", file: "excheck/radio_nocheck"},
+    //   {id: 210, pId: 2, name: "Radio chkDisabled Demo", file: "excheck/radio_chkDisabled"},
+    //   {id: 211, pId: 2, name: "Radio halfCheck Demo", file: "excheck/radio_halfCheck"},
+    //   {id: 205, pId: 2, name: "Radio - zTree methods", file: "excheck/radio_fun"},
+    //
+    //   {id: 3, pId: 0, name: "[exedit] Editing", open: false},
+    //   {id: 301, pId: 3, name: "Normal Drag Node Operation", file: "exedit/drag"},
+    //   {id: 302, pId: 3, name: "Advanced Drag Node Operation", file: "exedit/drag_super"},
+    //   {id: 303, pId: 3, name: "Move / Copy - zTree methods", file: "exedit/drag_fun"},
+    //   {id: 304, pId: 3, name: "Basic Edit Nodes", file: "exedit/edit"},
+    //   {id: 305, pId: 3, name: "Advanced Edit Nodes", file: "exedit/edit_super"},
+    //   {id: 306, pId: 3, name: "Edit Nodes - zTree methods", file: "exedit/edit_fun"},
+    //   {id: 307, pId: 3, name: "Editing Dynamic Tree", file: "exedit/async_edit"},
+    //   {id: 308, pId: 3, name: "Multiple Trees", file: "exedit/multiTree"},
+    //
+    //   {id: 4, pId: 0, name: "Large Amount of Data Loading", open: false},
+    //   {id: 401, pId: 4, name: "One-time Large Data Loading", file: "bigdata/common"},
+    //   {id: 402, pId: 4, name: "Loading Data in Batches", file: "bigdata/diy_async"},
+    //   {id: 403, pId: 4, name: "Loading Data By Pagination", file: "bigdata/page"},
+    //
+    //   {id: 5, pId: 0, name: "Multi-functional", open: false},
+    //   {id: 501, pId: 5, name: "Freeze the Root Node", file: "super/oneroot"},
+    //   {id: 502, pId: 5, name: "Click to Expand Node", file: "super/oneclick"},
+    //   {id: 503, pId: 5, name: "Keep Single Path", file: "super/singlepath"},
+    //   {id: 516, pId: 5, name: "Fuzzy Search", file: "super/fuzzySearch"},
+    //   {id: 504, pId: 5, name: "Adding Custom DOM", file: "super/diydom"},
+    //   {id: 505, pId: 5, name: "Checkbox / Radio Coexistence", file: "super/checkbox_radio"},
+    //   {id: 506, pId: 5, name: "Left Menu", file: "super/left_menu"},
+    //   {id: 513, pId: 5, name: "OutLook Style", file: "super/left_menuForOutLook"},
+    //   {id: 515, pId: 5, name: "Awesome Style", file: "super/awesome"},
+    //   {id: 514, pId: 5, name: "Metro Style", file: "super/metro"},
+    //   {id: 507, pId: 5, name: "Drop-down Menu", file: "super/select_menu"},
+    //   {id: 509, pId: 5, name: "Drop-down Menu with checkbox", file: "super/select_menu_checkbox"},
+    //   {id: 510, pId: 5, name: "Drop-down Menu with radio", file: "super/select_menu_radio"},
+    //   {id: 508, pId: 5, name: "Right-click Menu", file: "super/rightClickMenu"},
+    //   {id: 511, pId: 5, name: "Drag With Other DOMs", file: "super/dragWithOther"},
+    //   {id: 512, pId: 5, name: "Expand All Nodes with Async", file: "super/asyncForAll"},
+    //   {id: 517, pId: 5, name: "Keyboard Navigation", file: "super/keyboard_navigation"},
+    //
+    //   {id: 6, pId: 0, name: "Other Extension Package", open: false},
+    //   {id: 601, pId: 6, name: "hide ordinary node", file: "exhide/common"},
+    //   {id: 602, pId: 6, name: "hide with checkbox mode", file: "exhide/checkbox"},
+    //   {id: 603, pId: 6, name: "hide with radio mode", file: "exhide/radio"}
+    // ];
+ 
+    $(document).ready(function () {
+      var t = $("#tree");
+      t = $.fn.zTree.init(t, setting, zNodes);
+      demoIframe = $("#testIframe");
+      demoIframe.bind("load", loadReady);
+      var zTree = $.fn.zTree.getZTreeObj("tree");
+      zTree.selectNode(zTree.getNodeByParam("id", 101));
+ 
+    });
+ 
+    function loadReady() {
+      var bodyH = demoIframe.contents().find("body").get(0).scrollHeight,
+        htmlH = demoIframe.contents().find("html").get(0).scrollHeight,
+        maxH = Math.max(bodyH, htmlH), minH = Math.min(bodyH, htmlH),
+        h = demoIframe.height() >= maxH ? minH : maxH;
+      if (h < 530) h = 530;
+      demoIframe.height(h);
+    }
+ 
+    //-->
+  </SCRIPT>
+</HEAD>
+ 
+<BODY>
+<TABLE border=0 height=600px align=left>
+  <TR>
+    <TD width=260px align=left valign=top style="BORDER-RIGHT: #999999 1px dashed">
+      <ul id="tree" class="ztree" style="width:260px; overflow:auto;"></ul>
+    </TD>
+    <TD width=770px align=left valign=top>
+      <IFRAME ID="testIframe" Name="testIframe" FRAMEBORDER=0 SCROLLING=AUTO width=100% height=600px
+              SRC="core/standardData.html"></IFRAME>
+    </TD>
+  </TR>
+</TABLE>
+ 
+</BODY>
+</HTML>
+ 
